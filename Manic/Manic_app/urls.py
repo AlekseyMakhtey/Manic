@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('register/', views.register, name='register'),
-    # Другие URL вашего приложения
+    path('', views.home, name='home'),  # URL для главной страницы
 ]

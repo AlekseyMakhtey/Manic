@@ -1,0 +1,25 @@
+# Виртуальное окружение
+.venv/
+
+# Файлы базы данных
+db.sqlite3
+
+# Локальные настройки
+*.local.py
+
+# Временные файлы и директории
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+.DS_Store
+
+# Логи и кэш
+*.log
+*.cache
+
+# Файлы миграций Django
+*.pyc
+__pycache__/
+migrations/*.pyc

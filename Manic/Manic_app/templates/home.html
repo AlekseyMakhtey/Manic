@@ -1,0 +1,18 @@
+<!-- Manic_app/templates/home.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница - Manic</title>
+</head>
+<body>
+    <h1>Добро пожаловать на главную страницу Manic!</h1>
+    {% if user.is_authenticated %}
+        <p>Здравствуйте, {{ user.username }}! Вы успешно зарегистрировались и вошли в систему.</p>
+    {% else %}
+        <p>Добро пожаловать, гость!</p>
+    {% endif %}
+    <a href="{% url 'register' %}">Регистрация</a>
+</body>
+</html>
