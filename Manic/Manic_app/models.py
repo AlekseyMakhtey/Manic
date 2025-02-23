@@ -4,7 +4,6 @@ from django.core.validators import RegexValidator, MinValueValidator, MaxValueVa
 from django.core.exceptions import ValidationError
 from datetime import datetime, time, timedelta
 
-
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
 
@@ -13,8 +12,8 @@ class Client(models.Model):
                                  message="Номер телефона должен быть в формате: '+375ххххххххх'.")
     phone_number = models.CharField(validators=[phone_regex], max_length=13, blank=False, null=False)
 
-    # Поле для электронной почты
-    email = models.EmailField(max_length=254, unique=True, blank=False, null=False, default='default@example.com')
+    # Поле для электронной почты (без значения по умолчанию)
+    email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
 
     address = models.CharField(max_length=200, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -25,6 +24,8 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+
+# Остальные модели (NailTechnician, Schedule, Review) остаются без изменений
 
 
 class NailTechnician(models.Model):

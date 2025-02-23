@@ -1,14 +1,74 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Регистрация</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Зарегистрируйтесь в Manic для бронирования услуг маникюра">
+    <!-- SEO и безопасность -->
+    <meta name="robots" content="noindex, nofollow"> <!-- Для разработки, измените для продакшена -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;">
+
+    <title>Регистрация - Manic</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Animate.css для анимаций -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous">
+
+    <!-- Собственный CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body>
-    <h2>Регистрация</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+<body class="bg-gradient">
+    <div class="registration-container">
+        <div class="form-wrapper animate__animated animate__fadeInUp">
+            <h2 class="form-title">Регистрация в Manic</h2>
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="error-message animate__animated animate__shakeX">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                {{ error }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                        <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';">×</button>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="form-label" aria-label="Введите имя пользователя">Имя пользователя *</label>
+                    <input type="text" name="{{ form.username.html_name }}" class="form-input" required aria-required="true" placeholder="Ваше имя пользователя">
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">Email *</label>
+                    <input type="email" name="{{ form.email.html_name }}" class="form-input" required placeholder="example@domain.com">
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.phone_number.id_for_label }}" class="form-label">Номер телефона *</label>
+                    <input type="text" name="{{ form.phone_number.html_name }}" class="form-input" required placeholder="+375XXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">Адрес (необязательно)</label>
+                    <input type="text" name="{{ form.address.html_name }}" class="form-input" placeholder="Ваш адрес">
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">Пароль *</label>
+                    <input type="password" name="{{ form.password1.html_name }}" class="form-input" required placeholder="Введите надежный пароль (минимум 8 символов)">
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">Подтверждение пароля *</label>
+                    <input type="password" name="{{ form.password2.html_name }}" class="form-input" required placeholder="Повторите пароль">
+                </div>
+                <button type="submit" class="submit-btn animate__animated animate__pulse">Зарегистрироваться</button>
+                <p class="login-link">Уже зарегистрированы? <a href="{% url 'login' %}" class="custom-link">Войти</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Собственный JS -->
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
