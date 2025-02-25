@@ -137,6 +137,26 @@ body {
     text-decoration: underline;
 }
 
+.technician-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
 @media (max-width: 768px) {
     .form-wrapper {
         margin: 10px;
@@ -145,4 +165,6 @@ body {
     .form-title {
         font-size: 1.5rem;
     }
+
+
 }

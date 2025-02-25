@@ -1,18 +1,28 @@
-<!-- Manic_app/templates/home.html -->
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница - Manic</title>
+    <title>Manic - Мастера</title>
+    <!-- Подключите CSS, если нужно -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Добро пожаловать на главную страницу Manic!</h1>
-    {% if user.is_authenticated %}
-        <p>Здравствуйте, {{ user.username }}! Вы успешно зарегистрировались и вошли в систему.</p>
-    {% else %}
-        <p>Добро пожаловать, гость!</p>
-    {% endif %}
-    <a href="{% url 'register' %}">Регистрация</a>
+    <h1>Наши Мастера по Маникюру</h1>
+    <div class="technicians-list">
+        {% for technician in technicians %}
+            <div class="technician-card">
+                <h2>{{ technician.first_name }} {{ technician.last_name }}</h2>
+                <p>Специализация: {{ technician.get_specialization_display }}</p>
+                <p>Опыт: {{ technician.experience_years }} лет</p>
+                <p>Рейтинг: {{ technician.rating }}/5</p>
+                <a href="{% url 'technician_detail' technician.id %}" class="btn">Подробнее</a>
+            </div>
+        {% empty %}
+            <p>Нет доступных мастеров.</p>
+        {% endfor %}
+    </div>
 </body>
 </html>

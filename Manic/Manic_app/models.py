@@ -4,13 +4,14 @@ from django.core.validators import RegexValidator, MinValueValidator, MaxValueVa
 from django.core.exceptions import ValidationError
 from datetime import datetime, time, timedelta
 
+
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
 
-    # Валидация номера телефона, пример для международного формата
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{13,14}$',
-                                 message="Номер телефона должен быть в формате: '+375ххххххххх'.")
-    phone_number = models.CharField(validators=[phone_regex], max_length=13, blank=False, null=False)
+    phone_regex = RegexValidator(regex=r'^\+375\d{9}$',
+                                 message="Номер телефона должен быть в формате: '+375XXXXXXXXX'.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=12, blank=False, null=False)
+    #
 
     # Поле для электронной почты (без значения по умолчанию)
     email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
@@ -28,31 +29,27 @@ class Client(models.Model):
 # Остальные модели (NailTechnician, Schedule, Review) остаются без изменений
 
 
+# В models.py
 class NailTechnician(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='nail_technician_profile', null=True, blank=True)  # Добавляем связь
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-
-    # Валидация номера телефона
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Номер телефона должен быть в формате: '+375ххххххххх'.")
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True)
-
+    phone_number = models.CharField(
+        validators=[
+            RegexValidator(regex=r'^\+375\d{9}$', message="Номер телефона должен быть в формате: '+375XXXXXXXXX'.")],
+        max_length=12,  # Установите максимальную длину, соответствующую '+375XXXXXXXXX' (12 символов)
+        unique=True
+    )
     email = models.EmailField(max_length=254, unique=True)
-
     SPECIALIZATIONS = [
         ('classic', 'Классический маникюр'),
         ('gel', 'Гелевое наращивание'),
         ('acrylic', 'Акриловое наращивание'),
         ('design', 'Дизайн ногтей'),
-        # Добавьте другие специализации по необходимости
     ]
     specialization = models.CharField(max_length=10, choices=SPECIALIZATIONS, default='classic')
-
     experience_years = models.PositiveIntegerField(help_text="Сколько лет опыта работы")
-
-    # Рейтинг можно хранить в виде FloatField с ограничением от 0 до 10
     rating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
-    # Адрес или место работы
     work_address = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
@@ -61,6 +58,15 @@ class NailTechnician(models.Model):
     class Meta:
         verbose_name = 'Мастер по маникюру'
         verbose_name_plural = 'Мастера по маникюру'
+
+
+class WorkPhoto(models.Model):
+    technician = models.ForeignKey(NailTechnician, on_delete=models.CASCADE, related_name='work_photos')
+    photo = models.ImageField(upload_to='work_photos/', blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return f"Фото работы для {self.technician}"
 
 
 class Schedule(models.Model):

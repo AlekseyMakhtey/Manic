@@ -9,7 +9,15 @@
     <meta name="description" content="Войдите в Manic для бронирования услуг маникюра">
     <!-- SEO и безопасность -->
     <meta name="robots" content="noindex, nofollow"> <!-- Для разработки, измените для продакшена -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;">
+
+    <!-- Обновлённый CSP для разрешения внешних стилей и скриптов -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        img-src 'self' data:;
+        font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+    ">
 
     <title>Вход - Manic</title>
 
@@ -43,7 +51,7 @@
                     <input type="password" name="password" id="id_password" class="form-input" required>
                 </div>
                 <button type="submit" class="submit-btn animate__animated animate__pulse">Войти</button>
-                <p class="login-link">Ещё не зарегистрированы? <a href="{% url 'register' %}" class="text-primary">Регистрация</a></p>
+                <p class="login-link">Ещё не зарегистрированы? <a href="{% url 'register' %}" class="custom-link">Регистрация</a></p>
             </form>
         </div>
     </div>

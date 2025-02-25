@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client
+from .models import Client, NailTechnician
 from django.core.validators import RegexValidator
 
 
 class ClientRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    phone_number = forms.CharField(max_length=17, required=True, validators=[
-        RegexValidator(regex=r'^\+?1?\d{13,14}$', message="Номер телефона должен быть в формате: '+375ххххххххх'.")])
+    phone_number = forms.CharField(max_length=13, required=True, help_text="Формат: +375XXXXXXXXX")
     address = forms.CharField(max_length=200, required=False)
 
     class Meta:
@@ -91,4 +90,30 @@ class ClientRegistrationForm(UserCreationForm):
                                        phone_number=self.cleaned_data['phone_number'],
                                        email=self.cleaned_data['email'],
                                        address=self.cleaned_data.get('address', ''))
+        return user
+
+
+class NailTechnicianRegistrationForm(UserCreationForm):
+    phone_number = forms.CharField(max_length=13, required=True, help_text="Формат: +375XXXXXXXXX")
+    email = forms.EmailField(max_length=254, required=True)
+    work_address = forms.CharField(max_length=200, required=False)
+    specialization = forms.ChoiceField(choices=NailTechnician.SPECIALIZATIONS, required=True)
+    experience_years = forms.IntegerField(min_value=0, required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'phone_number', 'work_address', 'specialization', 'experience_years', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            NailTechnician.objects.create(
+                user=user,  # Связываем с пользователем через внешний ключ, если нужно (добавьте поле user в NailTechnician, если его нет)
+                phone_number=self.cleaned_data['phone_number'],
+                email=self.cleaned_data['email'],
+                work_address=self.cleaned_data['work_address'],
+                specialization=self.cleaned_data['specialization'],
+                experience_years=self.cleaned_data['experience_years']
+            )
         return user
